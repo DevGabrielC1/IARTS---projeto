@@ -1,38 +1,67 @@
-package com.example.projetotarefas.model;
-
+// Classe que representa uma Tarefa
 public class Tarefas {
-    private int id;
-    private String descricao;
-    private String dataInicio;   // formato: "yyyy-MM-dd"
-    private String prazoFinal;   // formato: "yyyy-MM-dd"
-    private boolean importante;  // true = estrela marcada
-    private boolean concluida;   // true = tarefa feita
+    private String nomeTarefa;
+    private String prioridade;
+    private String categoria;
+    private String dataLimite;
+    private String horaLimite;
+    private boolean concluida;
 
-    public Tarefas(int id, String descricao, String dataInicio, String prazoFinal, boolean importante, boolean concluida) {
-        this.id = id;
-        this.descricao = descricao;
-        this.dataInicio = dataInicio;
-        this.prazoFinal = prazoFinal;
-        this.importante = importante;
+    // Construtor
+    public Tarefas(String nomeTarefa, String prioridade, String categoria, String dataLimite, String horaLimite, String string, boolean concluida) {
+        this.nomeTarefa = nomeTarefa;
+        this.prioridade = prioridade;
+        this.categoria = categoria;
+        this.dataLimite = dataLimite;
+        this.horaLimite = horaLimite;
         this.concluida = concluida;
     }
 
-    // Getters e Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public String getNomeTarefa() {
+        return nomeTarefa;
+    }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setNomeTarefa(String nomeTarefa) {
+        this.nomeTarefa = nomeTarefa;
+    }
 
-    public String getDataInicio() { return dataInicio; }
-    public void setDataInicio(String dataInicio) { this.dataInicio = dataInicio; }
+    public String getPrioridade() {
+        return prioridade;
+    }
 
-    public String getPrazoFinal() { return prazoFinal; }
-    public void setPrazoFinal(String prazoFinal) { this.prazoFinal = prazoFinal; }
+    public void setPrioridade(String prioridade) {
+        this.prioridade = prioridade;
+    }
 
-    public boolean isImportante() { return importante; }
-    public void setImportante(boolean importante) { this.importante = importante; }
+    public String getCategoria() {
+        return categoria;
+    }
 
-    public boolean isConcluida() { return concluida; }
-    public void setConcluida(boolean concluida) { this.concluida = concluida; }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getDataLimite() {
+        return dataLimite;
+    }
+
+    public void setDataLimite(String dataLimite) {
+        this.dataLimite = dataLimite;
+    }
+
+    public String getHoraLimite() {
+        return horaLimite;
+    }
+
+    public void setHoraLimite(String horaLimite) {
+        this.horaLimite = horaLimite;
+    }
+
+    public boolean isConcluida() {
+        return concluida;
+    }
+
+    public void setConcluida(boolean concluida) {
+        this.concluida = concluida;
+    }
 }
