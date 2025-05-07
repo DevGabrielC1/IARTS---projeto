@@ -9,24 +9,24 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Database extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "taskmanager.db";
-
     private static final String TABELA_TAREFAS = "tarefas";
 
-    private static final String SQL_CREATE_TAREFAS = "CREATE TABLE tarefas (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "descricao TEXT NOT NULL, " +
-            "data_inicio TEXT NOT NULL, " +
-            "prazo_final TEXT NOT NULL, " +
-            "importancia INTEGER NOT NULL CHECK(importancia IN (0,1)))";  // agora é booleano
+    private static final String SQL_CREATE_TAREFAS =
+            "CREATE TABLE " + TABELA_TAREFAS + " (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "descricao TEXT NOT NULL, " +
+                    "data_inicio TEXT NOT NULL, " +
+                    "prazo_final TEXT NOT NULL, " +
+                    "importancia INTEGER NOT NULL CHECK(importancia IN (0,1)), " +
+                    "concluida INTEGER NOT NULL CHECK(concluida IN (0,1)))"; // Adicionada a coluna "concluida"
 
-    private static final String SQL_DELETE_TAREFAS = "DROP TABLE IF EXISTS tarefas";
+    private static final String SQL_DELETE_TAREFAS = "DROP TABLE IF EXISTS " + TABELA_TAREFAS;
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,53 +49,103 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Inserir nova tarefa
-    public long inserirTarefa(String descricao, String dataInicio, String prazoFinal, int importancia) {
+    public long inserirTarefa(Tarefas tarefa) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valores = new ContentValues();
-        valores.put("descricao", descricao);
-        valores.put("data_inicio", dataInicio);
-        valores.put("prazo_final", prazoFinal);
-        valores.put("importancia", importancia); // 0 ou 1
-
+        valores.put("descricao", tarefa.getDescricao());
+        valores.put("data_inicio", tarefa.getDataInicio());
+        valores.put("prazo_final", tarefa.getPrazoFinal());
+        valores.put("importancia", tarefa.isImportante() ? 1 : 0);
+        valores.put("concluida", tarefa.isConcluida() ? 1 : 0); // Gerenciando o campo de conclusão
         return db.insert(TABELA_TAREFAS, null, valores);
     }
 
-    // Atualizar uma tarefa existente
-    public int atualizarTarefa(int id, String descricao, String dataInicio, String prazoFinal, int importancia) {
+    // Atualizar tarefa
+    public int atualizarTarefa(Tarefas tarefa) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valores = new ContentValues();
-        valores.put("descricao", descricao);
-        valores.put("data_inicio", dataInicio);
-        valores.put("prazo_final", prazoFinal);
-        valores.put("importancia", importancia); // 0 ou 1
-
-        return db.update(TABELA_TAREFAS, valores, "id = ?", new String[]{String.valueOf(id)});
+        valores.put("descricao", tarefa.getDescricao());
+        valores.put("data_inicio", tarefa.getDataInicio());
+        valores.put("prazo_final", tarefa.getPrazoFinal());
+        valores.put("importancia", tarefa.isImportante() ? 1 : 0);
+        valores.put("concluida", tarefa.isConcluida() ? 1 : 0); // Atualizando o campo de conclusão
+        return db.update(TABELA_TAREFAS, valores, "id = ?", new String[]{String.valueOf(tarefa.getId())});
     }
 
-    // Deletar uma tarefa pelo ID
+    // Deletar tarefa
     public int deletarTarefa(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABELA_TAREFAS, "id = ?", new String[]{String.valueOf(id)});
     }
 
     // Buscar todas as tarefas
-    public List<HashMap<String, String>> buscarTarefas() {
-        List<HashMap<String, String>> lista = new ArrayList<>();
+    public List<Tarefas> buscarTodasTarefas() {
+        List<Tarefas> lista = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABELA_TAREFAS, null);
 
         if (cursor.moveToFirst()) {
             do {
-                HashMap<String, String> tarefa = new HashMap<>();
-                tarefa.put("id", String.valueOf(cursor.getInt(0)));
-                tarefa.put("descricao", cursor.getString(1));
-                tarefa.put("data_inicio", cursor.getString(2));
-                tarefa.put("prazo_final", cursor.getString(3));
-                tarefa.put("importancia", cursor.getInt(4) == 1 ? "Sim" : "Não");
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
+                String dataInicio = cursor.getString(cursor.getColumnIndexOrThrow("data_inicio"));
+                String prazoFinal = cursor.getString(cursor.getColumnIndexOrThrow("prazo_final"));
+                boolean importante = cursor.getInt(cursor.getColumnIndexOrThrow("importancia")) == 1;
+                boolean concluida = cursor.getInt(cursor.getColumnIndexOrThrow("concluida")) == 1;
 
+                Tarefas tarefa = new Tarefas(id, descricao, dataInicio, prazoFinal, importante, concluida);
                 lista.add(tarefa);
             } while (cursor.moveToNext());
         }
+
+        cursor.close();
+        return lista;
+    }
+
+    // Buscar tarefas concluídas
+    public List<Tarefas> buscarTarefasConcluidas() {
+        List<Tarefas> lista = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABELA_TAREFAS + " WHERE concluida = 1", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
+                String dataInicio = cursor.getString(cursor.getColumnIndexOrThrow("data_inicio"));
+                String prazoFinal = cursor.getString(cursor.getColumnIndexOrThrow("prazo_final"));
+                boolean importante = cursor.getInt(cursor.getColumnIndexOrThrow("importancia")) == 1;
+                boolean concluida = cursor.getInt(cursor.getColumnIndexOrThrow("concluida")) == 1;
+
+                Tarefas tarefa = new Tarefas(id, descricao, dataInicio, prazoFinal, importante, concluida);
+                lista.add(tarefa);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return lista;
+    }
+
+    // Buscar tarefas não concluídas
+    public List<Tarefas> buscarTarefasNaoConcluidas() {
+        List<Tarefas> lista = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABELA_TAREFAS + " WHERE concluida = 0", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
+                String dataInicio = cursor.getString(cursor.getColumnIndexOrThrow("data_inicio"));
+                String prazoFinal = cursor.getString(cursor.getColumnIndexOrThrow("prazo_final"));
+                boolean importante = cursor.getInt(cursor.getColumnIndexOrThrow("importancia")) == 1;
+                boolean concluida = cursor.getInt(cursor.getColumnIndexOrThrow("concluida")) == 1;
+
+                Tarefas tarefa = new Tarefas(id, descricao, dataInicio, prazoFinal, importante, concluida);
+                lista.add(tarefa);
+            } while (cursor.moveToNext());
+        }
+
         cursor.close();
         return lista;
     }
