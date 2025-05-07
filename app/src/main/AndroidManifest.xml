@@ -13,7 +13,14 @@
         android:theme="@style/Theme.ProjetoTarefas"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".telaTarefas"
+            android:exported="false"
+            android:theme="@style/Theme.ProjetoTarefas" />
+        <activity
+            android:name=".Preferences"
+            android:exported="false" />
+        <activity
+            android:name=".telaLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
