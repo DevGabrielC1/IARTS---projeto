@@ -115,7 +115,7 @@ public class AddNotaActivity extends AppCompatActivity {
             }
         });
 
-        dbHelper = new TaskDBHelper(this);
+        dbHelper = new Database(this);
     }
 
     private void updateDateAndTimeTextViews() {
@@ -167,15 +167,15 @@ public class AddNotaActivity extends AppCompatActivity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(TaskContract.TaskEntry.COLUMN_TASK, task);
-        values.put(TaskContract.TaskEntry.COLUMN_CATEGORY, category);
-        values.put(TaskContract.TaskEntry.COLUMN_PRIORITY, priority);
-        values.put(TaskContract.TaskEntry.COLUMN_NOTES, notes);
-        values.put(TaskContract.TaskEntry.COLUMN_DUE_DATE, dueDate);
-        values.put(TaskContract.TaskEntry.COLUMN_DUE_TIME, dueTime);
-        values.put(TaskContract.TaskEntry.COLUMN_COMPLETED, 0);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA, task);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA, category);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE, priority);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES, notes);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE, dueDate);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE, dueTime);
+        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CONCLUIDA, 0);
 
-        long newRowId = db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
+        long newRowId = db.insert(ContratoTarefa.EntradaTarefa.NOME_TABELA, null, values);
         db.close();
         if (newRowId == -1) {
             Toast.makeText(this, "Failed to add task", Toast.LENGTH_SHORT).show();
