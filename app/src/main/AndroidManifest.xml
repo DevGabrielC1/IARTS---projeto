@@ -25,8 +25,19 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.ProjetoTarefas" />
+        <activity
+            android:name=".AddNotaActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ProjetoTarefas" />
+
+        <activity
+            android:name=".EditarNotas"
+            android:exported="true"
+            android:theme="@style/Theme.ProjetoTarefas" />
+
+
         <activity
             android:name=".Preferences"
             android:exported="false" />
