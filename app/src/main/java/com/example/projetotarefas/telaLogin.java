@@ -51,7 +51,7 @@ public class telaLogin extends AppCompatActivity {
                 userInfo.getText().toString().equals("admin")
                         && password.getText().toString().equals(senhaPadrao)
         ){
-            Intent intent = new Intent(telaLogin.this, telaTarefas.class);
+            Intent intent = new Intent(telaLogin.this, telaLogin.class);
             intent.putExtra("usuario", userInfo.getText().toString());
 
             startActivity(intent);
