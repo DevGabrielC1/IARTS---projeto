@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".tel">
+    tools:context=".AddTaskActivity">
 
     <TextView
         android:id="@+id/text_view_task"
@@ -15,21 +15,13 @@
         android:text="Task:"
         android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/task_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_task"
-        android:layout_marginTop="8dp"
-        android:hint="Enter task name" />
-
     <TextView
         android:id="@+id/text_view_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/task_edit_text"
+        android:layout_below="@+id/text_view_task"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="Category:"
         android:textSize="18sp" />
 
@@ -127,7 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
         android:layout_marginTop="8dp"
-        android:hint="Enter notes" />
+        android:hint="Update notes" />
 
     <Button
         android:id="@+id/button_add_task"
@@ -135,6 +127,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/notes_edit_text"
         android:layout_marginTop="16dp"
-        android:text="Add Task" />
+        android:text="Edit Task" />
 
 </RelativeLayout>
