@@ -110,7 +110,7 @@ public class AddNotaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addTask();
-                Intent intent = new Intent(AddNotaActivity.this, telasTarefas.class);
+                Intent intent = new Intent(AddNotaActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

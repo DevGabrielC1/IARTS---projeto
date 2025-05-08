@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".telaTarefas"
+            android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.ProjetoTarefas" />
         <activity
