@@ -45,11 +45,11 @@ public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHold
         MainActivity.Data currentItem = mTaskList.get(position);
 
         holder.mTextViewName.setText(currentItem.getName());
-        holder.mTextViewDate.setText("Date: "+currentItem.getDate());
-        holder.mTextViewTime.setText("Time: "+currentItem.getTime());
-        holder.text_category.setText("Category: "+currentItem.getCategory());
-        holder.text_priority.setText("Priority: "+currentItem.getPriority());
-        holder.text_notes.setText("Note: "+currentItem.getNotes());
+        holder.mTextViewDate.setText("Data: "+currentItem.getDate());
+        holder.mTextViewTime.setText("Hora: "+currentItem.getTime());
+        holder.text_category.setText("Categoria: "+currentItem.getCategory());
+        holder.text_priority.setText("Prioridade: "+currentItem.getPriority());
+        holder.text_notes.setText("Observações: "+currentItem.getNotes());
     }
 
     @Override

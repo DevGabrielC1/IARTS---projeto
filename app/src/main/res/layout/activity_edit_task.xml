@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@color/white"
     tools:context=".EditarNotas">
 
     <TextView
@@ -12,8 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Task:"
-        android:textSize="18sp" />
+        android:text="Tarefa:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <TextView
         android:id="@+id/text_view_category"
@@ -22,8 +25,10 @@
         android:layout_below="@+id/text_view_task"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:text="Category:"
-        android:textSize="18sp" />
+        android:text="Categoria:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Spinner
         android:id="@+id/category_spinner"
@@ -39,8 +44,10 @@
         android:layout_below="@id/category_spinner"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Priority:"
-        android:textSize="18sp" />
+        android:text="Prioridade:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Spinner
         android:id="@+id/priority_spinner"
@@ -56,8 +63,10 @@
         android:layout_below="@id/priority_spinner"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Due Date:"
-        android:textSize="18sp" />
+        android:text="Data final:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Button
         android:id="@+id/button_select_due_date"
@@ -65,7 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_date"
         android:layout_marginTop="8dp"
-        android:text="Select Date" />
+        android:text="Selecionar data"
+        android:textColor="@color/white"
+        android:backgroundTint="#4A9F82"
+        />
 
     <TextView
         android:id="@+id/selected_date_text_view"
@@ -83,8 +95,10 @@
         android:layout_below="@id/selected_date_text_view"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Due Time:"
-        android:textSize="18sp" />
+        android:text="Horário final:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Button
         android:id="@+id/button_select_due_time"
@@ -92,7 +106,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_time"
         android:layout_marginTop="8dp"
-        android:text="Select Time" />
+        android:text="Selecionar horário"
+        android:textColor="@color/white"
+        android:backgroundTint="#4A9F82"
+        />
 
     <TextView
         android:id="@+id/selected_time_text_view"
@@ -110,8 +127,10 @@
         android:layout_below="@id/selected_time_text_view"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Notes:"
-        android:textSize="18sp" />
+        android:text="Observações:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <EditText
         android:id="@+id/notes_edit_text"
@@ -119,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
         android:layout_marginTop="8dp"
-        android:hint="Update notes" />
+        android:hint="Atualize as observações" />
 
     <Button
         android:id="@+id/button_add_task"
@@ -127,6 +146,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/notes_edit_text"
         android:layout_marginTop="16dp"
-        android:text="Edit Task" />
+        android:text="Editar tarefa"
+        android:textColor="@color/white"
+        android:backgroundTint="#4A9F82"
+        />
 
 </RelativeLayout>
