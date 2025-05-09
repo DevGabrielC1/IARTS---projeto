@@ -30,9 +30,11 @@ import android.view.View;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projetotarefas.model.CreateTaskModal;
 import com.example.projetotarefas.model.Database;
 import com.example.projetotarefas.model.Tarefas;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabAddTask;
     RecyclerView recyclerView;
     private NotasAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddNotaActivity.class);
-                startActivity(intent);
+                CreateTaskModal bottomSheet = new CreateTaskModal();
+                bottomSheet.show(getSupportFragmentManager(), "OlaMundoBottomSheet");
             }
         });
 

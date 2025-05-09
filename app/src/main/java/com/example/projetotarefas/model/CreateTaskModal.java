@@ -1,4 +1,4 @@
-package com.example.projetotarefas;
+package com.example.projetotarefas.model;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -9,47 +9,63 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.projetotarefas.model.Database;
+import com.example.projetotarefas.ContratoTarefa;
+import com.example.projetotarefas.MainActivity;
+import com.example.projetotarefas.NotaAlarmeReceiver;
+import com.example.projetotarefas.R;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddNotaActivity extends AppCompatActivity {
 
-    private TextView selectedDateTextView;
-    private TextView selectedTimeTextView;
-    private EditText taskEditText;
-    private Spinner categorySpinner;
-    private Spinner prioritySpinner;
-    private EditText notesEditText;
+private TextView selectedDateTextView;
+private TextView selectedTimeTextView;
+private EditText taskEditText;
+private EditText notesEditText;
+private Database dbHelper;
+private Calendar calendar;
+private int mYear, mMonth, mDay, mHour, mMinute;
 
-    private Database dbHelper;
+public class CreateTaskModal extends BottomSheetDialogFragment {
 
-    private Calendar calendar;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.create_task_modal, container, false);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        View bottomSheet = getView();
+        if (bottomSheet != null) {
+            ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
+            int screenHeight = (int) (getResources().getDisplayMetrics().heightPixels * 0.3); // 30%
+            layoutParams.height = screenHeight;
+            bottomSheet.setLayoutParams(layoutParams);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.create_task_modal;
 
         selectedDateTextView = findViewById(R.id.selected_date_text_view);
         selectedTimeTextView = findViewById(R.id.selected_time_text_view);
         taskEditText = findViewById(R.id.task_edit_text);
-        categorySpinner = findViewById(R.id.category_spinner);
-        prioritySpinner = findViewById(R.id.priority_spinner);
         notesEditText = findViewById(R.id.notes_edit_text);
         Button selectDateButton = findViewById(R.id.button_select_due_date);
         Button selectTimeButton = findViewById(R.id.button_select_due_time);
@@ -79,11 +95,18 @@ public class AddNotaActivity extends AppCompatActivity {
 
         addTaskButton.setOnClickListener(v -> {
             addTask();
-            Intent intent = new Intent(AddNotaActivity.this, MainActivity.class);
+            Intent intent = new Intent(create_task_modal.this, MainActivity.class);
             startActivity(intent);
         });
 
         dbHelper = new Database(this);
+    }
+
+    private void setContentView(int activityAddTask) {
+    }
+
+    private TextView findViewById(int selectedDateTextView) {
+        return null;
     }
 
     private void updateDateAndTimeTextViews() {
@@ -175,3 +198,7 @@ public class AddNotaActivity extends AppCompatActivity {
 
     }
 }
+
+}
+
+
