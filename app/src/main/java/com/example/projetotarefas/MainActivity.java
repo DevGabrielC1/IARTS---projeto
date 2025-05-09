@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
                 markTaskAsComplete(position);
                 taskData.remove(position);
-                Toast.makeText(MainActivity.this, "Task Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Nota Excluída", Toast.LENGTH_SHORT).show();
                 adapter.notifyItemRemoved(position);
             }
 
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
                 markTaskAsComplete(position);
                 taskData.remove(position);
-                Toast.makeText(MainActivity.this, "Task Completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Nota Concluída", Toast.LENGTH_SHORT).show();
                 adapter.notifyItemRemoved(position);
             }
         });

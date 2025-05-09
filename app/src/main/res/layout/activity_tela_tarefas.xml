@@ -23,7 +23,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_task"
         android:layout_marginTop="8dp"
-        android:hint="Adicionar nome da tarefa" />
+        android:hint="Adicionar nome da tarefa"
+        android:textColor="#D0D0D0"
+        android:textColorHighlight="@color/black"
+        android:textColorHint="@color/black"
+        android:textColorLink="@color/black" />
 
     <TextView
         android:id="@+id/text_view_category"
@@ -52,9 +56,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Priority:"
-        android:textSize="18sp"
         android:textColor="@color/black"
-        />
+        android:textColorLink="#090909"
+        android:textSize="18sp" />
 
     <Spinner
         android:id="@+id/priority_spinner"
@@ -84,7 +88,8 @@
 
         android:backgroundTint="#4A9F82"
         android:text="Selecionar data"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textColorLink="@color/black" />
 
     <TextView
         android:id="@+id/selected_date_text_view"
@@ -115,7 +120,8 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="#4A9F82"
         android:text="Selecionar horário"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textColorLink="@color/black" />
 
     <TextView
         android:id="@+id/selected_time_text_view"

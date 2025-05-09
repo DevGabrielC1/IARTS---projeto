@@ -1,6 +1,7 @@
 package com.example.projetotarefas;
 
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -97,7 +98,7 @@ public class EditarNotas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editTask(task);
-                Toast.makeText(EditarNotas.this, "Task edited", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditarNotas.this, "Nota editada", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(EditarNotas.this, MainActivity.class);
                 startActivity(intent);
             }
@@ -164,6 +165,20 @@ public class EditarNotas extends AppCompatActivity {
         db.update(ContratoTarefa.EntradaTarefa.NOME_TABELA,values,ContratoTarefa.EntradaTarefa.COLUNA_TAREFA + " = ?", new String[]{task});
         db.close();
 
+        Calendar alarmCalendar = Calendar.getInstance();
+        alarmCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
+
+        Intent alarmIntent = new Intent(this, NotaAlarmeReceiver.class);
+        alarmIntent.putExtra("task_title", task); // ou outro texto que quiser mostrar
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, task.hashCode(), alarmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setExact(android.app.AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
+        }
     }
 }
 

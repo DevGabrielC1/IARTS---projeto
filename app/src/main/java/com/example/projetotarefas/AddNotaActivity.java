@@ -150,7 +150,7 @@ public class AddNotaActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(this, "Tarefa adicionada com sucesso", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Tarefa adicionada", Toast.LENGTH_SHORT).show();
 
         // Agenda o alarme com notificação
         Calendar alarmCalendar = Calendar.getInstance();
