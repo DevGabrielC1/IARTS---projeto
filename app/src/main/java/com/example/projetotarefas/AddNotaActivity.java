@@ -182,5 +182,7 @@ public class AddNotaActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Task added successfully", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 }

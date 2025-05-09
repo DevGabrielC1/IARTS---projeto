@@ -10,12 +10,15 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.projetotarefas.model.Tarefas;
+
 import java.util.List;
 
 public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHolder> {
 
     private Context mContext;
-    private List<MainActivity.Data> mTaskList;
+    private List<Tarefas> mTaskList;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -28,7 +31,7 @@ public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHold
         mListener = listener;
     }
 
-    public NotasAdapter(Context context, List<MainActivity.Data> taskList) {
+    public NotasAdapter(Context context, List<Tarefas> taskList) {
         mContext = context;
         mTaskList = taskList;
     }
@@ -42,14 +45,14 @@ public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        MainActivity.Data currentItem = mTaskList.get(position);
+        Tarefas currentItem = mTaskList.get(position);
 
-        holder.mTextViewName.setText(currentItem.getName());
-        holder.mTextViewDate.setText("Data: "+currentItem.getDate());
-        holder.mTextViewTime.setText("Hora: "+currentItem.getTime());
-        holder.text_category.setText("Categoria: "+currentItem.getCategory());
-        holder.text_priority.setText("Prioridade: "+currentItem.getPriority());
-        holder.text_notes.setText("Observações: "+currentItem.getNotes());
+        holder.mTextViewName.setText(currentItem.getNomeTarefa());
+        holder.mTextViewDate.setText("Data: "+currentItem.getDataLimite());
+        holder.mTextViewTime.setText("Hora: "+currentItem.getHoraLimite());
+        holder.text_category.setText("Categoria: "+currentItem.getCategoria());
+        holder.text_priority.setText("Prioridade: "+currentItem.getPrioridade());
+        holder.text_notes.setText("Observações: "+currentItem.getObservacoes());
     }
 
     @Override

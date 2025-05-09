@@ -8,7 +8,6 @@
     android:padding="16dp"
     android:background="#4A9F82">
 
-    <!-- HEADER (fixo no topo) -->
     <TextView
         android:id="@+id/header"
         android:layout_width="0dp"
@@ -23,7 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Guideline inferior (para limite do scroll) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
         android:layout_width="wrap_content"
@@ -31,7 +29,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.89" />
 
-    <!-- ScrollView abaixo do Header -->
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="0dp"
@@ -54,7 +51,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Botão flutuante -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_task"
         android:layout_width="wrap_content"
