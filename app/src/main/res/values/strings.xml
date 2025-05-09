@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">To-Do List</string>
     <string-array name="categories_array">
-        <item>Work</item>
-        <item>Personal</item>
+        <item>Trabalho</item>
+        <item>Pessoal</item>
         <item>Shopping</item>
         <!-- Add more categories as needed -->
     </string-array>
 
     <string-array name="priorities_array">
-        <item>High</item>
-        <item>Medium</item>
-        <item>Low</item>
+        <item>Alto</item>
+        <item>Medio</item>
+        <item>Pequeno</item>
     </string-array>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

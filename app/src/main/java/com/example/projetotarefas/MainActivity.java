@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projetotarefas.model.Database;
+import com.example.projetotarefas.model.Tarefas;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private ScrollView taskScrollView;
     private ArrayAdapter<String> taskAdapter;
     private Database dbHelper;
-    private List<Data> taskData;
+    private List<Tarefas> taskData;
     FloatingActionButton fabAddTask;
     RecyclerView recyclerView;
     private NotasAdapter adapter;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEditClick(int position) {
                 Intent intent = new Intent(MainActivity.this, EditarNotas.class);
-                intent.putExtra("task", taskData.get(position).getName());
+                intent.putExtra("task", taskData.get(position).getNomeTarefa());
                 startActivity(intent);
                 //Toast.makeText(MainActivity.this, "Edit clicked at position " + position, Toast.LENGTH_SHORT).show();
             }
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    public void loadTasksFromSQLite(List<Data> data) {
+    public void loadTasksFromSQLite(List<Tarefas> data) {
         // Assuming you have a SQLiteOpenHelper instance named dbHelper
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ContratoTarefa.EntradaTarefa.NOME_TABELA, null);
@@ -110,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("Range") String taskDate = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE));
             @SuppressLint("Range") String taskTime = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE));
             @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA));
-            @SuppressLint("Range") String priority = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES));
-            @SuppressLint("Range") String notes = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_CONCLUIDA));
+            @SuppressLint("Range") String priority = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE));
+            @SuppressLint("Range") String notes = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES));
 
-            data.add(new Data(taskName,taskDate,taskTime,category,priority,notes));
+            data.add(new Tarefas(taskName,priority, category, taskDate, taskTime, notes));
             //Toast.makeText(this, "added", Toast.LENGTH_SHORT).show();
         }
 
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
     public void markTaskAsComplete(int position) {
-        String task = taskData.get(position).getName();
+        String task = taskData.get(position).getNomeTarefa();
         //Toast.makeText(this, task, Toast.LENGTH_SHORT).show();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -135,42 +136,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.close();
         super.onDestroy();
     }
-    public class Data{
-        String name;
-        String date;
-        String time;
-        String category;
-        String priority;
-        String notes;
-        Data(String name, String date, String time, String category, String priority, String notes) {
-            this.name = name;
-            this.date = date;
-            this.time = time;
-            this.category = category;
-            this.priority = priority;
-            this.notes = notes;
-        }
-        public String getName() {
-            return name;
-        }
 
-        public String getDate() {
-            return date;
-        }
-
-        public String getTime() {
-            return time;
-        }
-        public String getCategory() {
-            return category;
-        }
-        public String getPriority() {
-            return priority;
-        }
-        public String getNotes() {
-            return notes;
-        }
-    }
 
 
 }

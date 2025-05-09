@@ -1,3 +1,5 @@
+package com.example.projetotarefas.model;
+
 // Classe que representa uma Tarefa
 public class Tarefas {
     private String nomeTarefa;
@@ -5,16 +7,17 @@ public class Tarefas {
     private String categoria;
     private String dataLimite;
     private String horaLimite;
-    private boolean concluida;
+
+    private String observacoes;
 
     // Construtor
-    public Tarefas(String nomeTarefa, String prioridade, String categoria, String dataLimite, String horaLimite, String string, boolean concluida) {
+    public Tarefas(String nomeTarefa, String prioridade, String categoria, String dataLimite, String horaLimite, String observacoes) {
         this.nomeTarefa = nomeTarefa;
         this.prioridade = prioridade;
         this.categoria = categoria;
         this.dataLimite = dataLimite;
         this.horaLimite = horaLimite;
-        this.concluida = concluida;
+        this.observacoes = observacoes;
     }
 
     public String getNomeTarefa() {
@@ -57,11 +60,13 @@ public class Tarefas {
         this.horaLimite = horaLimite;
     }
 
-    public boolean isConcluida() {
-        return concluida;
+    public void setObservacoes(String observacoes){
+        this.observacoes = observacoes;
     }
 
-    public void setConcluida(boolean concluida) {
-        this.concluida = concluida;
+    public String getObservacoes(){
+        return observacoes;
     }
+
+
 }

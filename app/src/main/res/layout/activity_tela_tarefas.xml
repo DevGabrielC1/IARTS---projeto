@@ -4,16 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".tel">
+    android:background="@color/white"
+    tools:context=".AddNotaActivity">
 
     <TextView
         android:id="@+id/text_view_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Task:"
-        android:textSize="18sp" />
+        android:text="Tarefa:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <EditText
         android:id="@+id/task_edit_text"
@@ -21,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_task"
         android:layout_marginTop="8dp"
-        android:hint="Enter task name" />
+        android:hint="Adicionar nome da tarefa" />
 
     <TextView
         android:id="@+id/text_view_category"
@@ -30,8 +32,10 @@
         android:layout_below="@id/task_edit_text"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Category:"
-        android:textSize="18sp" />
+        android:text="Categoria"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Spinner
         android:id="@+id/category_spinner"
@@ -48,7 +52,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Priority:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Spinner
         android:id="@+id/priority_spinner"
@@ -64,8 +70,10 @@
         android:layout_below="@id/priority_spinner"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Due Date:"
-        android:textSize="18sp" />
+        android:text="Data final:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Button
         android:id="@+id/button_select_due_date"
@@ -73,7 +81,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_date"
         android:layout_marginTop="8dp"
-        android:text="Select Date" />
+
+        android:backgroundTint="#4A9F82"
+        android:text="Selecionar data"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/selected_date_text_view"
@@ -91,8 +102,10 @@
         android:layout_below="@id/selected_date_text_view"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Due Time:"
-        android:textSize="18sp" />
+        android:text="Horário final:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <Button
         android:id="@+id/button_select_due_time"
@@ -100,7 +113,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_time"
         android:layout_marginTop="8dp"
-        android:text="Select Time" />
+        android:backgroundTint="#4A9F82"
+        android:text="Selecionar horário"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/selected_time_text_view"
@@ -118,8 +133,10 @@
         android:layout_below="@id/selected_time_text_view"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Notes:"
-        android:textSize="18sp" />
+        android:text="Observações:"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 
     <EditText
         android:id="@+id/notes_edit_text"
@@ -127,7 +144,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
         android:layout_marginTop="8dp"
-        android:hint="Enter notes" />
+        android:hint="Adicione observações" />
 
     <Button
         android:id="@+id/button_add_task"
@@ -135,6 +152,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/notes_edit_text"
         android:layout_marginTop="16dp"
-        android:text="Add Task" />
+        android:backgroundTint="#4A9F82"
+        android:text="Adicionar tarefa"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

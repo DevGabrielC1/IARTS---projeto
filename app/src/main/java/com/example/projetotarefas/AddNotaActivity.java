@@ -171,5 +171,7 @@ public class AddNotaActivity extends AppCompatActivity {
             );
             Log.d("AlarmDebug", "Alarme agendado para: " + alarmCalendar.getTime());
         }
+
+
     }
 }

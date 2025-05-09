@@ -36,7 +36,7 @@
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date: May 14, 2024"
+                android:text="Data May 14, 2024"
                 android:textSize="14sp" />
 
             <TextView
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Category: "
+            android:text="Categoria:"
             android:textSize="14sp" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Priority: "
+            android:text="Prioridade:"
             android:textSize="14sp" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Notes: "
+            android:text="Observações:"
             android:textSize="14sp" />
 
         <LinearLayout
@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Done"
+                android:text="Concluir"
                 android:textColor="?attr/colorAccent"
                 android:textSize="16sp" />
 
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="Edit"
+                android:text="Editar"
                 android:textColor="?attr/colorAccent" />
 
             <Button
@@ -102,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="Delete"
+                android:text="Excluir"
                 android:textColor="?attr/colorAccent" />
 
         </LinearLayout>
