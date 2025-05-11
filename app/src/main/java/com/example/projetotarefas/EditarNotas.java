@@ -147,8 +147,6 @@ public class EditarNotas extends AppCompatActivity {
     }
 
     private void editTask(String task) {
-        String category = categorySpinner.getSelectedItem().toString();
-        String priority = prioritySpinner.getSelectedItem().toString();
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
         String dueTime = selectedTimeTextView.getText().toString().trim();
@@ -156,8 +154,6 @@ public class EditarNotas extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA, task);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA, category);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE, priority);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES, notes);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE, dueDate);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE, dueTime);

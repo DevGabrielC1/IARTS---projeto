@@ -48,8 +48,6 @@ public class AddNotaActivity extends AppCompatActivity {
         selectedDateTextView = findViewById(R.id.selected_date_text_view);
         selectedTimeTextView = findViewById(R.id.selected_time_text_view);
         taskEditText = findViewById(R.id.task_edit_text);
-        categorySpinner = findViewById(R.id.category_spinner);
-        prioritySpinner = findViewById(R.id.priority_spinner);
         notesEditText = findViewById(R.id.notes_edit_text);
         Button selectDateButton = findViewById(R.id.button_select_due_date);
         Button selectTimeButton = findViewById(R.id.button_select_due_time);
@@ -121,8 +119,6 @@ public class AddNotaActivity extends AppCompatActivity {
 
     private void addTask() {
         String task = taskEditText.getText().toString().trim();
-        String category = categorySpinner.getSelectedItem().toString();
-        String priority = prioritySpinner.getSelectedItem().toString();
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
         String dueTime = selectedTimeTextView.getText().toString().trim();
@@ -135,8 +131,6 @@ public class AddNotaActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA, task);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA, category);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE, priority);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES, notes);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE, dueDate);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE, dueTime);
