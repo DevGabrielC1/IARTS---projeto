@@ -69,7 +69,7 @@
         />
 
     <Button
-        android:id="@+id/button_select_due_date"
+        android:id="@+id/button_select_due_date_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_date"
@@ -83,7 +83,7 @@
         android:id="@+id/selected_date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_select_due_date"
+        android:layout_below="@id/button_select_due_date_add"
         android:layout_marginTop="8dp"
         android:text=""
         android:textSize="16sp" />
@@ -101,7 +101,7 @@
         />
 
     <Button
-        android:id="@+id/button_select_due_time"
+        android:id="@+id/button_select_due_time_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_time"
@@ -115,7 +115,7 @@
         android:id="@+id/selected_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_select_due_time"
+        android:layout_below="@id/button_select_due_time_add"
         android:layout_marginTop="8dp"
         android:text=""
         android:textSize="16sp" />
@@ -133,7 +133,7 @@
         />
 
     <EditText
-        android:id="@+id/notes_edit_text"
+        android:id="@+id/notes_edit_text_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
@@ -141,10 +141,10 @@
         android:hint="Atualize as observações" />
 
     <Button
-        android:id="@+id/button_add_task"
+        android:id="@+id/button_add_task_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/notes_edit_text"
+        android:layout_below="@id/notes_edit_text_add"
         android:layout_marginTop="16dp"
         android:text="Editar tarefa"
         android:textColor="@color/white"

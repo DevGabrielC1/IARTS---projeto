@@ -1,34 +1,15 @@
 package com.example.projetotarefas;
 
-
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import android.database.Cursor;
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.view.View;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ScrollView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,96 +20,111 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
     private ScrollView taskScrollView;
-    private ArrayAdapter<String> taskAdapter;
     private Database dbHelper;
     private List<Tarefas> taskData;
-    FloatingActionButton fabAddTask;
-    RecyclerView recyclerView;
+    private FloatingActionButton fabAddTask;
+    private RecyclerView recyclerView;
     private NotasAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        taskData=new ArrayList<>();
-        taskAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+        taskData = new ArrayList<>();
         fabAddTask = findViewById(R.id.fab_add_task);
         dbHelper = new Database(this);
+
         loadTasksFromSQLite(taskData);
-        recyclerView=findViewById(R.id.recyclerview);
+
+        recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NotasAdapter(
-                this, taskData);
+        adapter = new NotasAdapter(this, taskData);
         recyclerView.setAdapter(adapter);
+
         adapter.setOnItemClickListener(new NotasAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
-                Intent intent = new Intent(MainActivity.this, EditarNotas.class);
-                intent.putExtra("task", taskData.get(position).getNomeTarefa());
-                startActivity(intent);
-                //Toast.makeText(MainActivity.this, "Edit clicked at position " + position, Toast.LENGTH_SHORT).show();
+                Tarefas tarefaSelecionada = taskData.get(position);
+                EditarNotas editModal = new EditarNotas(tarefaSelecionada);
+
+                editModal.setOnTaskEditedListener(() -> {
+                    loadTasksFromSQLite(taskData);
+                    adapter.notifyDataSetChanged();
+                });
+
+                editModal.show(getSupportFragmentManager(), "EditTaskModal");
             }
 
             @Override
             public void onDeleteClick(int position) {
+                ConfirmarExclusao confirmDialog = new ConfirmarExclusao();
 
-                markTaskAsComplete(position);
-                taskData.remove(position);
-                Toast.makeText(MainActivity.this, "Nota Excluída", Toast.LENGTH_SHORT).show();
-                adapter.notifyItemRemoved(position);
+                confirmDialog.setConfirmarDeleteListener(() -> {
+                    markTaskAsComplete(position);
+                    taskData.remove(position);
+                    adapter.notifyItemRemoved(position);
+                    Toast.makeText(MainActivity.this, "Nota Excluída", Toast.LENGTH_SHORT).show();
+                });
+
+                confirmDialog.show(getSupportFragmentManager(), "ConfirmDeleteDialog");
             }
 
             @Override
             public void onCheckboxClick(int position) {
-
                 markTaskAsComplete(position);
                 taskData.remove(position);
-                Toast.makeText(MainActivity.this, "Nota Concluída", Toast.LENGTH_SHORT).show();
                 adapter.notifyItemRemoved(position);
+                Toast.makeText(MainActivity.this, "Nota Concluída", Toast.LENGTH_SHORT).show();
             }
         });
 
-        fabAddTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddNotaActivity.class);
-                startActivity(intent);
-            }
-        });
+        fabAddTask.setOnClickListener(view -> {
+            CreateTaskModal modal = new CreateTaskModal();
 
+            // Callback para receber nova tarefa e atualizar RecyclerView
+            modal.setOnTaskCreatedListener(novaTarefa -> {
+                taskData.add(novaTarefa);
+                adapter.notifyItemInserted(taskData.size() - 1);
+            });
+
+            modal.show(getSupportFragmentManager(), "CreateTaskModal");
+        });
     }
+
     public void loadTasksFromSQLite(List<Tarefas> data) {
-        // Assuming you have a SQLiteOpenHelper instance named dbHelper
+        data.clear();  // Evita duplicatas
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ContratoTarefa.EntradaTarefa.NOME_TABELA, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ContratoTarefa.EntradaTarefa.NOME_TABELA, null);
 
         while (cursor.moveToNext()) {
             @SuppressLint("Range") String taskName = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA));
             @SuppressLint("Range") String taskDate = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE));
             @SuppressLint("Range") String taskTime = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE));
-            @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA));
-            @SuppressLint("Range") String priority = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE));
             @SuppressLint("Range") String notes = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES));
 
-            data.add(new Tarefas(taskName,priority, category, taskDate, taskTime, notes));
-            //Toast.makeText(this, "added", Toast.LENGTH_SHORT).show();
+            data.add(new Tarefas(taskName, taskDate, taskTime, notes));
         }
 
         cursor.close();
         db.close();
     }
+
     public void markTaskAsComplete(int position) {
         String task = taskData.get(position).getNomeTarefa();
-        //Toast.makeText(this, task, Toast.LENGTH_SHORT).show();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_CONCLUIDA, 1);
+
+        // Marca como concluído ou deleta
         db.delete(ContratoTarefa.EntradaTarefa.NOME_TABELA,
                 ContratoTarefa.EntradaTarefa.COLUNA_TAREFA + " = ?", new String[]{task});
+
+        db.close();
     }
 
     @Override
@@ -136,7 +132,4 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.close();
         super.onDestroy();
     }
-
-
-
 }

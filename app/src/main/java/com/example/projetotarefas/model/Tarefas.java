@@ -11,10 +11,8 @@ public class Tarefas {
     private String observacoes;
 
     // Construtor
-    public Tarefas(String nomeTarefa, String prioridade, String categoria, String dataLimite, String horaLimite, String observacoes) {
+    public Tarefas(String nomeTarefa, String dataLimite, String horaLimite, String observacoes) {
         this.nomeTarefa = nomeTarefa;
-        this.prioridade = prioridade;
-        this.categoria = categoria;
         this.dataLimite = dataLimite;
         this.horaLimite = horaLimite;
         this.observacoes = observacoes;
