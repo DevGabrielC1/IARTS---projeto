@@ -1,34 +1,16 @@
 package com.example.projetotarefas;
 
-
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import android.database.Cursor;
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.view.View;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ScrollView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +21,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private ScrollView taskScrollView;
@@ -54,28 +35,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        taskData=new ArrayList<>();
+        taskData = new ArrayList<>();
         taskAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         fabAddTask = findViewById(R.id.fab_add_task);
         dbHelper = new Database(this);
         loadTasksFromSQLite(taskData);
-        recyclerView=findViewById(R.id.recyclerview);
+        recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NotasAdapter(
-                this, taskData);
+        adapter = new NotasAdapter(this, taskData);
         recyclerView.setAdapter(adapter);
+
         adapter.setOnItemClickListener(new NotasAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
                 Intent intent = new Intent(MainActivity.this, EditarNotas.class);
                 intent.putExtra("task", taskData.get(position).getNomeTarefa());
                 startActivity(intent);
-                //Toast.makeText(MainActivity.this, "Edit clicked at position " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDeleteClick(int position) {
-
                 markTaskAsComplete(position);
                 taskData.remove(position);
                 Toast.makeText(MainActivity.this, "Nota Excluída", Toast.LENGTH_SHORT).show();
@@ -84,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCheckboxClick(int position) {
-
                 markTaskAsComplete(position);
                 taskData.remove(position);
                 Toast.makeText(MainActivity.this, "Nota Concluída", Toast.LENGTH_SHORT).show();
@@ -92,19 +70,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Aqui foi feita a alteração para abrir o modal
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddNotaActivity.class);
-                startActivity(intent);
+                CreateTaskModal modal = new CreateTaskModal();
+                modal.show(getSupportFragmentManager(), "CreateTaskModal");
             }
         });
-
     }
+
     public void loadTasksFromSQLite(List<Tarefas> data) {
-        // Assuming you have a SQLiteOpenHelper instance named dbHelper
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ContratoTarefa.EntradaTarefa.NOME_TABELA, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ContratoTarefa.EntradaTarefa.NOME_TABELA, null);
 
         while (cursor.moveToNext()) {
             @SuppressLint("Range") String taskName = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA));
@@ -113,15 +91,14 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("Range") String notes = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES));
 
             data.add(new Tarefas(taskName, taskDate, taskTime, notes));
-            //Toast.makeText(this, "added", Toast.LENGTH_SHORT).show();
         }
 
         cursor.close();
         db.close();
     }
+
     public void markTaskAsComplete(int position) {
         String task = taskData.get(position).getNomeTarefa();
-        //Toast.makeText(this, task, Toast.LENGTH_SHORT).show();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_CONCLUIDA, 1);
@@ -134,7 +111,4 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.close();
         super.onDestroy();
     }
-
-
-
 }

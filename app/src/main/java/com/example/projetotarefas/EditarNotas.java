@@ -8,11 +8,9 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -47,10 +45,10 @@ public class EditarNotas extends AppCompatActivity {
         text_view_task.setText(task);
         selectedDateTextView = findViewById(R.id.selected_date_text_view);
         selectedTimeTextView = findViewById(R.id.selected_time_text_view);
-        notesEditText = findViewById(R.id.notes_edit_text);
-        Button selectDateButton = findViewById(R.id.button_select_due_date);
-        Button selectTimeButton = findViewById(R.id.button_select_due_time);
-        Button addTaskButton = findViewById(R.id.button_add_task);
+        notesEditText = findViewById(R.id.notes_edit_text_add);
+        Button selectDateButton = findViewById(R.id.button_select_due_date_add);
+        Button selectTimeButton = findViewById(R.id.button_select_due_time_add);
+        Button addTaskButton = findViewById(R.id.button_add_task_add);
 
         calendar = Calendar.getInstance();
         mYear = calendar.get(Calendar.YEAR);
