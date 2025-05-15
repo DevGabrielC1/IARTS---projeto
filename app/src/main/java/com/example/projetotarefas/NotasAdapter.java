@@ -50,8 +50,6 @@ public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHold
         holder.mTextViewName.setText(currentItem.getNomeTarefa());
         holder.mTextViewDate.setText("Data: "+currentItem.getDataLimite());
         holder.mTextViewTime.setText("Hora: "+currentItem.getHoraLimite());
-        holder.text_category.setText("Categoria: "+currentItem.getCategoria());
-        holder.text_priority.setText("Prioridade: "+currentItem.getPrioridade());
         holder.text_notes.setText("Observações: "+currentItem.getObservacoes());
     }
 
@@ -65,8 +63,6 @@ public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHold
         public TextView mTextViewName;
         public TextView mTextViewDate;
         public TextView mTextViewTime;
-        public TextView text_category;
-        public TextView text_priority;
         public TextView text_notes;
         public CheckBox mCheckBox;
         public Button mButtonEdit;
@@ -77,8 +73,6 @@ public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.TaskViewHold
             mTextViewName = itemView.findViewById(R.id.text_name);
             mTextViewDate = itemView.findViewById(R.id.text_date);
             mTextViewTime = itemView.findViewById(R.id.text_time);
-            text_category = itemView.findViewById(R.id.text_category);
-            text_priority = itemView.findViewById(R.id.text_priority);
             text_notes= itemView.findViewById(R.id.text_notes);
 
 

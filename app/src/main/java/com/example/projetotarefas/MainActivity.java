@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -23,23 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
     private ScrollView taskScrollView;
-    private ArrayAdapter<String> taskAdapter;
     private Database dbHelper;
     private List<Tarefas> taskData;
-    FloatingActionButton fabAddTask;
-    RecyclerView recyclerView;
+    private FloatingActionButton fabAddTask;
+    private RecyclerView recyclerView;
     private NotasAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         taskData = new ArrayList<>();
-        taskAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         fabAddTask = findViewById(R.id.fab_add_task);
         dbHelper = new Database(this);
+
         loadTasksFromSQLite(taskData);
+
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new NotasAdapter(this, taskData);
@@ -48,39 +49,55 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new NotasAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
-                Intent intent = new Intent(MainActivity.this, EditarNotas.class);
-                intent.putExtra("task", taskData.get(position).getNomeTarefa());
-                startActivity(intent);
+                Tarefas tarefaSelecionada = taskData.get(position);
+                EditarNotas editModal = new EditarNotas(tarefaSelecionada);
+
+                editModal.setOnTaskEditedListener(() -> {
+                    loadTasksFromSQLite(taskData);
+                    adapter.notifyDataSetChanged();
+                });
+
+                editModal.show(getSupportFragmentManager(), "EditTaskModal");
             }
 
             @Override
             public void onDeleteClick(int position) {
-                markTaskAsComplete(position);
-                taskData.remove(position);
-                Toast.makeText(MainActivity.this, "Nota Excluída", Toast.LENGTH_SHORT).show();
-                adapter.notifyItemRemoved(position);
+                ConfirmarExclusao confirmDialog = new ConfirmarExclusao();
+
+                confirmDialog.setConfirmarDeleteListener(() -> {
+                    markTaskAsComplete(position);
+                    taskData.remove(position);
+                    adapter.notifyItemRemoved(position);
+                    Toast.makeText(MainActivity.this, "Nota Excluída", Toast.LENGTH_SHORT).show();
+                });
+
+                confirmDialog.show(getSupportFragmentManager(), "ConfirmDeleteDialog");
             }
 
             @Override
             public void onCheckboxClick(int position) {
                 markTaskAsComplete(position);
                 taskData.remove(position);
-                Toast.makeText(MainActivity.this, "Nota Concluída", Toast.LENGTH_SHORT).show();
                 adapter.notifyItemRemoved(position);
+                Toast.makeText(MainActivity.this, "Nota Concluída", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Aqui foi feita a alteração para abrir o modal
-        fabAddTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CreateTaskModal modal = new CreateTaskModal();
-                modal.show(getSupportFragmentManager(), "CreateTaskModal");
-            }
+        fabAddTask.setOnClickListener(view -> {
+            CreateTaskModal modal = new CreateTaskModal();
+
+            // Callback para receber nova tarefa e atualizar RecyclerView
+            modal.setOnTaskCreatedListener(novaTarefa -> {
+                taskData.add(novaTarefa);
+                adapter.notifyItemInserted(taskData.size() - 1);
+            });
+
+            modal.show(getSupportFragmentManager(), "CreateTaskModal");
         });
     }
 
     public void loadTasksFromSQLite(List<Tarefas> data) {
+        data.clear();  // Evita duplicatas
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + ContratoTarefa.EntradaTarefa.NOME_TABELA, null);
 
@@ -102,8 +119,12 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_CONCLUIDA, 1);
+
+        // Marca como concluído ou deleta
         db.delete(ContratoTarefa.EntradaTarefa.NOME_TABELA,
                 ContratoTarefa.EntradaTarefa.COLUNA_TAREFA + " = ?", new String[]{task});
+
+        db.close();
     }
 
     @Override

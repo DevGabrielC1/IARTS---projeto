@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.projetotarefas.model.Database;
+import com.example.projetotarefas.model.Tarefas;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -39,6 +39,16 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
     private Database dbHelper;
     private Calendar calendar;
     private int mYear, mMonth, mDay, mHour, mMinute;
+
+    public interface OnTaskCreatedListener {
+        void onTaskCreated(Tarefas novaTarefa);
+    }
+
+    private OnTaskCreatedListener callback;
+
+    public void setOnTaskCreatedListener(OnTaskCreatedListener listener) {
+        this.callback = listener;
+    }
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -62,17 +72,17 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
         mMinute = calendar.get(Calendar.MINUTE);
 
         dbHelper = new Database(requireContext());
-
         updateDateAndTimeTextViews();
 
         selectDateButton.setOnClickListener(v -> showDatePickerDialog());
         selectTimeButton.setOnClickListener(v -> showTimePickerDialog());
 
         addTaskButton.setOnClickListener(v -> {
-            addTask();
+            Tarefas nova = addTask();
+            if (nova != null && callback != null) {
+                callback.onTaskCreated(nova);
+            }
             dismiss(); // Fecha o modal
-            Intent intent = new Intent(requireContext(), MainActivity.class);
-            startActivity(intent);
         });
 
         return view;
@@ -85,7 +95,7 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
         View bottomSheet = getView();
         if (bottomSheet != null) {
             ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
-            int screenHeight = (int) (getResources().getDisplayMetrics().heightPixels * 0.3); // 30% da tela
+            int screenHeight = (int) (getResources().getDisplayMetrics().heightPixels * 0.3);
             layoutParams.height = screenHeight;
             bottomSheet.setLayoutParams(layoutParams);
         }
@@ -124,7 +134,7 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
         timePickerDialog.show();
     }
 
-    private void addTask() {
+    private Tarefas addTask() {
         String task = taskEditText.getText().toString().trim();
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
@@ -132,7 +142,7 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
 
         if (task.isEmpty()) {
             Toast.makeText(requireContext(), "Digite uma tarefa", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -148,12 +158,12 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
 
         if (newRowId == -1) {
             Toast.makeText(requireContext(), "Erro ao adicionar tarefa", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         Toast.makeText(requireContext(), "Tarefa adicionada", Toast.LENGTH_SHORT).show();
 
-        // Agendar alarme
+        // Agendar notificação
         Calendar alarmCalendar = Calendar.getInstance();
         alarmCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
 
@@ -162,7 +172,8 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 requireContext(), (int) newRowId, alarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(ALARM_SERVICE);
         if (alarmManager != null) {
@@ -173,5 +184,7 @@ public class CreateTaskModal extends BottomSheetDialogFragment {
             );
             Log.d("AlarmDebug", "Alarme agendado para: " + alarmCalendar.getTime());
         }
+
+        return new Tarefas(task, dueDate, dueTime, notes);
     }
 }
