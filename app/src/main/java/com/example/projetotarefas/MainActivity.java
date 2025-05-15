@@ -110,11 +110,9 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("Range") String taskName = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA));
             @SuppressLint("Range") String taskDate = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE));
             @SuppressLint("Range") String taskTime = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE));
-            @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA));
-            @SuppressLint("Range") String priority = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE));
             @SuppressLint("Range") String notes = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES));
 
-            data.add(new Tarefas(taskName,priority, category, taskDate, taskTime, notes));
+            data.add(new Tarefas(taskName, taskDate, taskTime, notes));
             //Toast.makeText(this, "added", Toast.LENGTH_SHORT).show();
         }
 

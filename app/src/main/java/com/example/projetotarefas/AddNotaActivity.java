@@ -61,17 +61,6 @@ public class AddNotaActivity extends AppCompatActivity {
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
-
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(
-                this, R.array.categories_array, android.R.layout.simple_spinner_item);
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoryAdapter);
-
-        ArrayAdapter<CharSequence> priorityAdapter = ArrayAdapter.createFromResource(
-                this, R.array.priorities_array, android.R.layout.simple_spinner_item);
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        prioritySpinner.setAdapter(priorityAdapter);
-
         updateDateAndTimeTextViews();
 
         selectDateButton.setOnClickListener(v -> showDatePickerDialog());
@@ -121,8 +110,6 @@ public class AddNotaActivity extends AppCompatActivity {
 
     private void addTask() {
         String task = taskEditText.getText().toString().trim();
-        String category = categorySpinner.getSelectedItem().toString();
-        String priority = prioritySpinner.getSelectedItem().toString();
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
         String dueTime = selectedTimeTextView.getText().toString().trim();
@@ -135,8 +122,6 @@ public class AddNotaActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA, task);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA, category);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE, priority);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES, notes);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE, dueDate);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE, dueTime);

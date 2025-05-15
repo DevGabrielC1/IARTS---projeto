@@ -28,8 +28,6 @@ public class EditarNotas extends AppCompatActivity {
 
     private TextView selectedDateTextView;
     private TextView selectedTimeTextView;
-    private Spinner categorySpinner;
-    private Spinner prioritySpinner;
     private EditText notesEditText;
     private TextView text_view_task;
     private Database dbHelper;
@@ -49,8 +47,6 @@ public class EditarNotas extends AppCompatActivity {
         text_view_task.setText(task);
         selectedDateTextView = findViewById(R.id.selected_date_text_view);
         selectedTimeTextView = findViewById(R.id.selected_time_text_view);
-        categorySpinner = findViewById(R.id.category_spinner);
-        prioritySpinner = findViewById(R.id.priority_spinner);
         notesEditText = findViewById(R.id.notes_edit_text);
         Button selectDateButton = findViewById(R.id.button_select_due_date);
         Button selectTimeButton = findViewById(R.id.button_select_due_time);
@@ -62,21 +58,6 @@ public class EditarNotas extends AppCompatActivity {
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.categories_array,
-                android.R.layout.simple_spinner_item
-        );
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoryAdapter);
-
-        ArrayAdapter<CharSequence> priorityAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.priorities_array,
-                android.R.layout.simple_spinner_item
-        );
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        prioritySpinner.setAdapter(priorityAdapter);
 
         updateDateAndTimeTextViews();
 
@@ -147,8 +128,6 @@ public class EditarNotas extends AppCompatActivity {
     }
 
     private void editTask(String task) {
-        String category = categorySpinner.getSelectedItem().toString();
-        String priority = prioritySpinner.getSelectedItem().toString();
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
         String dueTime = selectedTimeTextView.getText().toString().trim();
@@ -156,8 +135,6 @@ public class EditarNotas extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA, task);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA, category);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE, priority);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES, notes);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE, dueDate);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE, dueTime);
