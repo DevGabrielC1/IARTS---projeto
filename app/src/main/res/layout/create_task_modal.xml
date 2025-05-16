@@ -11,10 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_task"
         android:layout_marginTop="8dp"
-        android:hint="Criar Tarefa"
+        android:hint="Criar Título da Tarefa"
         android:textColorHighlight="#0000"
-        android:background="@android:color/transparent"
-        android:textColorHint="#383232" />
+        android:background="@drawable/campoedittext"
+        android:outlineProvider="none"
+        android:textColorHint="#615959" />
+
 
     <EditText
         android:id="@+id/notes_edit_text_add"
@@ -22,9 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
         android:layout_marginTop="8dp"
-        android:hint="Adicione suas observações aqui, organize seu dia e se divirta enquanto conquista suas metas!"
+        android:hint="Adicione suas observações aqui"
         android:textColorHighlight="#0000"
-        android:background="@android:color/transparent"
+        android:background="@drawable/campoedittext"
+        android:outlineProvider="none"
         android:textColorHint="#615959" />
 
     <LinearLayout
