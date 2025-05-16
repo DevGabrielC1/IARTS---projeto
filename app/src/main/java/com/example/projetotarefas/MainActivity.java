@@ -3,14 +3,18 @@ package com.example.projetotarefas;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +27,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_REQUEST_CODE = 1001;
+
     private ScrollView taskScrollView;
     private Database dbHelper;
     private List<Tarefas> taskData;
@@ -34,6 +40,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Pedido de permissão para notificações no Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        PERMISSION_REQUEST_CODE);
+            }
+        }
 
         taskData = new ArrayList<>();
         fabAddTask = findViewById(R.id.fab_add_task);
@@ -86,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         fabAddTask.setOnClickListener(view -> {
             CreateTaskModal modal = new CreateTaskModal();
 
-            // Callback para receber nova tarefa e atualizar RecyclerView
             modal.setOnTaskCreatedListener(novaTarefa -> {
                 taskData.add(novaTarefa);
                 adapter.notifyItemInserted(taskData.size() - 1);
@@ -94,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
 
             modal.show(getSupportFragmentManager(), "CreateTaskModal");
         });
+    }
+
+    // Resposta do pedido de permissão
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permissão para notificações concedida", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permissão para notificações negada. Notificações podem não funcionar.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void loadTasksFromSQLite(List<Tarefas> data) {
@@ -108,9 +137,8 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("Range") String notes = cursor.getString(cursor.getColumnIndex(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES));
 
             data.add(new Tarefas(taskName, taskDate, taskTime, notes));
-
         }
-        
+
         cursor.close();
         db.close();
     }
