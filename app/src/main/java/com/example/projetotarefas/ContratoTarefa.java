@@ -13,8 +13,6 @@ public class ContratoTarefa {
     public static final class EntradaTarefa implements BaseColumns {
         public static final String NOME_TABELA = "tarefas";
         public static final String COLUNA_TAREFA = "tarefa";
-        public static final String COLUNA_CATEGORIA = "categoria";
-        public static final String COLUNA_PRIORIDADE = "prioridade";
         public static final String COLUNA_OBSERVACOES = "observacoes";
         public static final String COLUNA_DATA_LIMITE = "data_limite";
         public static final String COLUNA_HORA_LIMITE = "hora_limite";

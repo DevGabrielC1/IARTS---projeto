@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">To-Do List</string>
+    <string name="app_name">MeOrganiza</string>
     <string-array name="categories_array">
         <item>Trabalho</item>
         <item>Pessoal</item>
