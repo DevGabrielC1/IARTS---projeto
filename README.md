@@ -27,3 +27,16 @@
 1. Clone este repositório:
    ```bash
    git clone https://github.com/DevGabrielC1/IARTS---projeto.git
+
+2. Abra o projeto no Android Studio.
+
+3. Aguarde o carregamento das dependências (Gradle).
+
+4. Conecte um emulador ou dispositivo físico com Android 12.
+
+5. Clique em **Run (Executar)** para instalar e abrir o app.
+
+## 📽️ Apresentações
+
+- 🖥️ **Slide de Apresentação**: [Clique aqui para visualizar](https://docs.google.com/presentation/d/1JGARxPjxuex-JrQ5cvsEW1JHboSyS-CaZ_iCNBwaH8Q/edit?usp=sharing)
+- 🎥 **Vídeo Demonstrativo**: [Assista aqui](https://drive.google.com/file/d/1vBpD94IaZsZ2NO_8ISwq5eYQ508642FW/view?usp=sharing)
