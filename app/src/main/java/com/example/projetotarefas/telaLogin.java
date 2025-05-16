@@ -26,7 +26,6 @@ public class telaLogin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
 
         Log.i("Debug", "minha msg");
@@ -34,6 +33,11 @@ public class telaLogin extends AppCompatActivity {
         userInfo = findViewById(R.id.editLogin);
         password = findViewById(R.id.editTextTextPassword);
         usuarioinvalido = findViewById(R.id.usuarioInvalido);
+
+        // 🔽 Recupera nome salvo e preenche no campo de login
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usuarioSalvo = sharedPreferences.getString("usuario_salvo", "");
+        userInfo.setText(usuarioSalvo); // Preenche automaticamente
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -43,20 +47,29 @@ public class telaLogin extends AppCompatActivity {
         });
     }
 
-    public void login(View view){
+    public void login(View view) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String senhaPadrao = sharedPreferences.getString("senha_padrao", "admin");
 
-        if(
-                userInfo.getText().toString().equals("admin")
-                        && password.getText().toString().equals(senhaPadrao)
-        ){
+        if (
+                userInfo.getText().toString().equals("admin") &&
+                        password.getText().toString().equals(senhaPadrao)
+        ) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("usuario_salvo", userInfo.getText().toString());
+            editor.apply();
+
             Intent intent = new Intent(telaLogin.this, MainActivity.class);
             intent.putExtra("usuario", userInfo.getText().toString());
 
             startActivity(intent);
-        }else{
+            finish();
+        } else {
             usuarioinvalido.setVisibility(View.VISIBLE);
         }
+    }
+    private void entrarNaMain() {
+        Intent intent = new Intent(telaLogin.this, MainActivity.class);
+        startActivity(intent);
     }
 }
