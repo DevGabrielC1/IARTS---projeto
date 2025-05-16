@@ -12,9 +12,9 @@
         android:layout_below="@id/text_view_task"
         android:layout_marginTop="8dp"
         android:hint="Criar Tarefa"
-        android:textColorHighlight="#2E2B2B"
-        android:textColorHint="#383232"
-        android:textColorLink="#0B0B0B" />
+        android:textColorHighlight="#0000"
+        android:background="@android:color/transparent"
+        android:textColorHint="#383232" />
 
     <EditText
         android:id="@+id/notes_edit_text_add"
@@ -22,9 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
         android:layout_marginTop="8dp"
-        android:hint="Adicione observações"
-        android:textColor="#453C3C"
-        android:textColorHighlight="#3A3838"
+        android:hint="Adicione suas observações aqui, organize seu dia e se divirta enquanto conquista suas metas!"
+        android:textColorHighlight="#0000"
+        android:background="@android:color/transparent"
         android:textColorHint="#615959" />
 
     <LinearLayout
@@ -32,34 +32,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_horizontal"
         android:padding="10dp">
 
         <Button
             android:id="@+id/button_select_due_date_add"
-            android:layout_width="69dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="8dp"
-            android:text="Selecionar Data"
-            android:drawableLeft="@drawable/ic_calendar"
-            android:backgroundTint="#4A9F82" />
+            android:background="#70FF0000"
+            android:text=""
+            android:drawableRight="@drawable/ic_calendar" />
 
         <Button
             android:id="@+id/button_select_due_time_add"
-            android:layout_width="68dp"
-            android:layout_height="48dp"
-            android:text="Selecionar Hora"
-            android:drawableLeft="@drawable/ic_clock"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#4A9F82" />
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="8dp"
+            android:background="#70FF0000"
+            android:text=""
+            android:drawableRight="@drawable/ic_clock" />
+
 
         <Button
             android:id="@+id/button_add_task_add"
             android:layout_width="151dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/notes_edit_text_add"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="#4A9F82"
             android:text="Salvar"
             android:textColor="@color/white" />
