@@ -18,7 +18,7 @@
         />
 
     <EditText
-        android:id="@+id/task_edit_text"
+        android:id="@+id/task_edit_text_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_task"
@@ -33,7 +33,7 @@
         android:id="@+id/text_view_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/task_edit_text"
+        android:layout_below="@id/task_edit_text_add"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Categoria"
@@ -80,7 +80,7 @@
         />
 
     <Button
-        android:id="@+id/button_select_due_date"
+        android:id="@+id/button_select_due_date_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_date"
@@ -95,7 +95,7 @@
         android:id="@+id/selected_date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_select_due_date"
+        android:layout_below="@id/button_select_due_date_add"
         android:layout_marginTop="8dp"
         android:text=""
         android:textSize="16sp" />
@@ -113,7 +113,7 @@
         />
 
     <Button
-        android:id="@+id/button_select_due_time"
+        android:id="@+id/button_select_due_time_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_due_time"
@@ -127,7 +127,7 @@
         android:id="@+id/selected_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_select_due_time"
+        android:layout_below="@id/button_select_due_time_add"
         android:layout_marginTop="8dp"
         android:text=""
         android:textSize="16sp" />
@@ -145,7 +145,7 @@
         />
 
     <EditText
-        android:id="@+id/notes_edit_text"
+        android:id="@+id/notes_edit_text_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
@@ -153,10 +153,10 @@
         android:hint="Adicione observações" />
 
     <Button
-        android:id="@+id/button_add_task"
+        android:id="@+id/button_add_task_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/notes_edit_text"
+        android:layout_below="@id/notes_edit_text_add"
         android:layout_marginTop="16dp"
         android:backgroundTint="#4A9F82"
         android:text="Adicionar tarefa"

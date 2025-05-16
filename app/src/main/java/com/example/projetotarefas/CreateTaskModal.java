@@ -1,5 +1,8 @@
 package com.example.projetotarefas;
 
+import static android.content.Context.ALARM_SERVICE;
+
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -9,48 +12,57 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.projetotarefas.model.Database;
+import com.example.projetotarefas.model.Tarefas;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddNotaActivity extends AppCompatActivity {
+public class CreateTaskModal extends BottomSheetDialogFragment {
 
     private TextView selectedDateTextView;
     private TextView selectedTimeTextView;
     private EditText taskEditText;
-    private Spinner categorySpinner;
-    private Spinner prioritySpinner;
     private EditText notesEditText;
-
     private Database dbHelper;
-
     private Calendar calendar;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
+    public interface OnTaskCreatedListener {
+        void onTaskCreated(Tarefas novaTarefa);
+    }
+
+    private OnTaskCreatedListener callback;
+
+    public void setOnTaskCreatedListener(OnTaskCreatedListener listener) {
+        this.callback = listener;
+    }
+
+    @SuppressLint("MissingInflatedId")
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.create_task_modal, container, false);
 
-        selectedDateTextView = findViewById(R.id.selected_date_text_view);
-        selectedTimeTextView = findViewById(R.id.selected_time_text_view);
-        taskEditText = findViewById(R.id.task_edit_text_add);
-        categorySpinner = findViewById(R.id.category_spinner);
-        prioritySpinner = findViewById(R.id.priority_spinner);
-        notesEditText = findViewById(R.id.notes_edit_text_add);
-        Button selectDateButton = findViewById(R.id.button_select_due_date_add);
-        Button selectTimeButton = findViewById(R.id.button_select_due_time_add);
-        Button addTaskButton = findViewById(R.id.button_add_task_add);
-
+        selectedDateTextView = view.findViewById(R.id.button_select_due_date_add);
+        selectedTimeTextView = view.findViewById(R.id.button_select_due_time_add);
+        taskEditText = view.findViewById(R.id.task_edit_text_add);
+        notesEditText = view.findViewById(R.id.notes_edit_text_add);
+        Button selectDateButton = view.findViewById(R.id.button_select_due_date_add);
+        Button selectTimeButton = view.findViewById(R.id.button_select_due_time_add);
+        Button addTaskButton = view.findViewById(R.id.button_add_task_add);
 
         calendar = Calendar.getInstance();
         mYear = calendar.get(Calendar.YEAR);
@@ -58,18 +70,35 @@ public class AddNotaActivity extends AppCompatActivity {
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
+
+        dbHelper = new Database(requireContext());
         updateDateAndTimeTextViews();
 
         selectDateButton.setOnClickListener(v -> showDatePickerDialog());
         selectTimeButton.setOnClickListener(v -> showTimePickerDialog());
 
         addTaskButton.setOnClickListener(v -> {
-            addTask();
-            Intent intent = new Intent(AddNotaActivity.this, MainActivity.class);
-            startActivity(intent);
+            Tarefas nova = addTask();
+            if (nova != null && callback != null) {
+                callback.onTaskCreated(nova);
+            }
+            dismiss(); // Fecha o modal
         });
 
-        dbHelper = new Database(this);
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        View bottomSheet = getView();
+        if (bottomSheet != null) {
+            ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
+            int screenHeight = (int) (getResources().getDisplayMetrics().heightPixels * 0.3);
+            layoutParams.height = screenHeight;
+            bottomSheet.setLayoutParams(layoutParams);
+        }
     }
 
     private void updateDateAndTimeTextViews() {
@@ -82,7 +111,7 @@ public class AddNotaActivity extends AppCompatActivity {
 
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
+                requireContext(),
                 (view, year, month, dayOfMonth) -> {
                     mYear = year;
                     mMonth = month;
@@ -95,7 +124,7 @@ public class AddNotaActivity extends AppCompatActivity {
 
     private void showTimePickerDialog() {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
-                this,
+                requireContext(),
                 (view, hourOfDay, minute) -> {
                     mHour = hourOfDay;
                     mMinute = minute;
@@ -105,15 +134,15 @@ public class AddNotaActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    private void addTask() {
+    private Tarefas addTask() {
         String task = taskEditText.getText().toString().trim();
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
         String dueTime = selectedTimeTextView.getText().toString().trim();
 
         if (task.isEmpty()) {
-            Toast.makeText(this, "Digite uma tarefa", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(requireContext(), "Digite uma tarefa", Toast.LENGTH_SHORT).show();
+            return null;
         }
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -128,23 +157,25 @@ public class AddNotaActivity extends AppCompatActivity {
         db.close();
 
         if (newRowId == -1) {
-            Toast.makeText(this, "Erro ao adicionar tarefa", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(requireContext(), "Erro ao adicionar tarefa", Toast.LENGTH_SHORT).show();
+            return null;
         }
 
-        Toast.makeText(this, "Tarefa adicionada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Tarefa adicionada", Toast.LENGTH_SHORT).show();
 
-        // Agenda o alarme com notificação
+        // Agendar notificação
         Calendar alarmCalendar = Calendar.getInstance();
         alarmCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
 
-        Intent alarmIntent = new Intent(this, NotaAlarmeReceiver.class);
+        Intent alarmIntent = new Intent(requireContext(), NotaAlarmeReceiver.class);
         alarmIntent.putExtra("task_title", task);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this, (int) newRowId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                requireContext(), (int) newRowId, alarmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
@@ -154,6 +185,6 @@ public class AddNotaActivity extends AppCompatActivity {
             Log.d("AlarmDebug", "Alarme agendado para: " + alarmCalendar.getTime());
         }
 
-
+        return new Tarefas(task, dueDate, dueTime, notes);
     }
 }
