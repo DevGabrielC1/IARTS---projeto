@@ -1,5 +1,9 @@
 package com.example.projetotarefas;
 
+import static android.content.Context.ALARM_SERVICE;
+
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -7,104 +11,101 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.projetotarefas.model.Database;
+import com.example.projetotarefas.model.Tarefas;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditarNotas extends AppCompatActivity {
+public class EditarNotas extends BottomSheetDialogFragment {
 
     private TextView selectedDateTextView;
     private TextView selectedTimeTextView;
-    private Spinner categorySpinner;
-    private Spinner prioritySpinner;
     private EditText notesEditText;
-    private TextView text_view_task;
-    private Database dbHelper;
+    private TextView taskTitleView;
 
+    private Database dbHelper;
     private Calendar calendar;
-    String task;
-    Intent intent;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
+    private Tarefas tarefa;
+
+    public EditarNotas(Tarefas tarefa) {
+        this.tarefa = tarefa;
+    }
+
+    public interface OnTaskEditedListener {
+        void onTaskEdited();
+    }
+
+    private OnTaskEditedListener callback;
+
+    public void setOnTaskEditedListener(OnTaskEditedListener listener) {
+        this.callback = listener;
+    }
+
+    @SuppressLint("MissingInflatedId")
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-       setContentView(R.layout.activity_edit_task);
-        intent = getIntent();
-        task = intent.getStringExtra("task");
-        text_view_task=findViewById(R.id.text_view_task);
-        text_view_task.setText(task);
-        selectedDateTextView = findViewById(R.id.selected_date_text_view);
-        selectedTimeTextView = findViewById(R.id.selected_time_text_view);
-        categorySpinner = findViewById(R.id.category_spinner);
-        prioritySpinner = findViewById(R.id.priority_spinner);
-        notesEditText = findViewById(R.id.notes_edit_text);
-        Button selectDateButton = findViewById(R.id.button_select_due_date);
-        Button selectTimeButton = findViewById(R.id.button_select_due_time);
-        Button addTaskButton = findViewById(R.id.button_add_task);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.create_task_modal, container, false);
+
+        selectedDateTextView = view.findViewById(R.id.button_select_due_date_add);
+        selectedTimeTextView = view.findViewById(R.id.button_select_due_time_add);
+        notesEditText = view.findViewById(R.id.notes_edit_text_add);
+        taskTitleView = view.findViewById(R.id.task_edit_text_add);
+        Button selectDateButton = view.findViewById(R.id.button_select_due_date_add);
+        Button selectTimeButton = view.findViewById(R.id.button_select_due_time_add);
+        Button editTaskButton = view.findViewById(R.id.button_add_task_add);
 
         calendar = Calendar.getInstance();
-        mYear = calendar.get(Calendar.YEAR);
-        mMonth = calendar.get(Calendar.MONTH);
-        mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        mHour = calendar.get(Calendar.HOUR_OF_DAY);
-        mMinute = calendar.get(Calendar.MINUTE);
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.categories_array,
-                android.R.layout.simple_spinner_item
-        );
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoryAdapter);
 
-        ArrayAdapter<CharSequence> priorityAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.priorities_array,
-                android.R.layout.simple_spinner_item
-        );
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        prioritySpinner.setAdapter(priorityAdapter);
+        dbHelper = new Database(requireContext());
 
+        taskTitleView.setEnabled(false); // título não editável
+        taskTitleView.setText(tarefa.getNomeTarefa());
+        notesEditText.setText(tarefa.getObservacoes());
+
+        setInitialDateAndTime(tarefa.getDataLimite(), tarefa.getHoraLimite());
         updateDateAndTimeTextViews();
 
-        selectDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
+        selectDateButton.setOnClickListener(v -> showDatePickerDialog());
+        selectTimeButton.setOnClickListener(v -> showTimePickerDialog());
+
+        editTaskButton.setText("Editar");
+        editTaskButton.setOnClickListener(v -> {
+            editTask();
+            if (callback != null) {
+                callback.onTaskEdited();
             }
+            dismiss();
         });
 
-        selectTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePickerDialog();
-            }
-        });
+        return view;
+    }
 
-        addTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editTask(task);
-                Toast.makeText(EditarNotas.this, "Nota editada", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(EditarNotas.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+    private void setInitialDateAndTime(String date, String time) {
+        String[] dateParts = date.split("/");
+        mDay = Integer.parseInt(dateParts[0]);
+        mMonth = Integer.parseInt(dateParts[1]) - 1;
+        mYear = Integer.parseInt(dateParts[2]);
 
-        dbHelper = new Database(this);
+        String[] timeParts = time.split(":");
+        mHour = Integer.parseInt(timeParts[0]);
+        mMinute = Integer.parseInt(timeParts[1]);
     }
 
     private void updateDateAndTimeTextViews() {
@@ -117,15 +118,12 @@ public class EditarNotas extends AppCompatActivity {
 
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        mYear = year;
-                        mMonth = month;
-                        mDay = dayOfMonth;
-                        updateDateAndTimeTextViews();
-                    }
+                requireContext(),
+                (view, year, month, dayOfMonth) -> {
+                    mYear = year;
+                    mMonth = month;
+                    mDay = dayOfMonth;
+                    updateDateAndTimeTextViews();
                 },
                 mYear, mMonth, mDay);
         datePickerDialog.show();
@@ -133,53 +131,45 @@ public class EditarNotas extends AppCompatActivity {
 
     private void showTimePickerDialog() {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
-                this,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        mHour = hourOfDay;
-                        mMinute = minute;
-                        updateDateAndTimeTextViews();
-                    }
+                requireContext(),
+                (view, hourOfDay, minute) -> {
+                    mHour = hourOfDay;
+                    mMinute = minute;
+                    updateDateAndTimeTextViews();
                 },
                 mHour, mMinute, true);
         timePickerDialog.show();
     }
 
-    private void editTask(String task) {
-        String category = categorySpinner.getSelectedItem().toString();
-        String priority = prioritySpinner.getSelectedItem().toString();
+    private void editTask() {
         String notes = notesEditText.getText().toString().trim();
         String dueDate = selectedDateTextView.getText().toString().trim();
         String dueTime = selectedTimeTextView.getText().toString().trim();
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_TAREFA, task);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA, category);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE, priority);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES, notes);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE, dueDate);
         values.put(ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE, dueTime);
-        values.put(ContratoTarefa.EntradaTarefa.COLUNA_CONCLUIDA, 0);
-        db.update(ContratoTarefa.EntradaTarefa.NOME_TABELA,values,ContratoTarefa.EntradaTarefa.COLUNA_TAREFA + " = ?", new String[]{task});
+        db.update(ContratoTarefa.EntradaTarefa.NOME_TABELA, values,
+                ContratoTarefa.EntradaTarefa.COLUNA_TAREFA + " = ?", new String[]{tarefa.getNomeTarefa()});
         db.close();
 
         Calendar alarmCalendar = Calendar.getInstance();
         alarmCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
 
-        Intent alarmIntent = new Intent(this, NotaAlarmeReceiver.class);
-        alarmIntent.putExtra("task_title", task); // ou outro texto que quiser mostrar
+        Intent alarmIntent = new Intent(requireContext(), NotaAlarmeReceiver.class);
+        alarmIntent.putExtra("task_title", tarefa.getNomeTarefa());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this, task.hashCode(), alarmIntent,
+                requireContext(), tarefa.getNomeTarefa().hashCode(), alarmIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(ALARM_SERVICE);
         if (alarmManager != null) {
-            alarmManager.setExact(android.app.AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
         }
+
+        Toast.makeText(requireContext(), "Tarefa editada", Toast.LENGTH_SHORT).show();
     }
 }
-
-

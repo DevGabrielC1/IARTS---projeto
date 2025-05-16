@@ -18,8 +18,6 @@ public class Database extends SQLiteOpenHelper {
             "CREATE TABLE " + ContratoTarefa.EntradaTarefa.NOME_TABELA + " (" +
                     ContratoTarefa.EntradaTarefa._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ContratoTarefa.EntradaTarefa.COLUNA_TAREFA + " TEXT NOT NULL, " +
-                    ContratoTarefa.EntradaTarefa.COLUNA_CATEGORIA + " TEXT, " +
-                    ContratoTarefa.EntradaTarefa.COLUNA_PRIORIDADE + " TEXT, " +
                     ContratoTarefa.EntradaTarefa.COLUNA_OBSERVACOES+ " TEXT, " +
                     ContratoTarefa.EntradaTarefa.COLUNA_DATA_LIMITE + " TEXT, " +
                     ContratoTarefa.EntradaTarefa.COLUNA_HORA_LIMITE + " TEXT, " +

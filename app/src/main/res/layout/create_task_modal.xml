@@ -6,7 +6,7 @@
     android:padding="20dp">
 
     <EditText
-        android:id="@+id/task_edit_text"
+        android:id="@+id/task_edit_text_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_task"
@@ -17,7 +17,7 @@
         android:textColorLink="#0B0B0B" />
 
     <EditText
-        android:id="@+id/notes_edit_text2"
+        android:id="@+id/notes_edit_text_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_notes"
@@ -34,26 +34,30 @@
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <ImageButton
-            android:id="@+id/button_select_due_date"
+        <Button
+            android:id="@+id/button_select_due_date_add"
             android:layout_width="69dp"
             android:layout_height="47dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
+            android:text="Selecionar Data"
+            android:drawableLeft="@drawable/ic_calendar"
             android:backgroundTint="#4A9F82" />
 
-        <ImageButton
-            android:id="@+id/button_select_due_time"
+        <Button
+            android:id="@+id/button_select_due_time_add"
             android:layout_width="68dp"
             android:layout_height="48dp"
+            android:text="Selecionar Hora"
+            android:drawableLeft="@drawable/ic_clock"
             android:layout_marginTop="8dp"
             android:backgroundTint="#4A9F82" />
 
         <Button
-            android:id="@+id/button_add_task"
+            android:id="@+id/button_add_task_add"
             android:layout_width="151dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/notes_edit_text"
+            android:layout_below="@id/notes_edit_text_add"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="8dp"
             android:backgroundTint="#4A9F82"
