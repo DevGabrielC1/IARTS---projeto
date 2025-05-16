@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/joan</item>
         <item>@font/kiwi_maru_light</item>
         <item>@font/kiwi_maru_medium</item>
         <item>@font/roboto</item>
